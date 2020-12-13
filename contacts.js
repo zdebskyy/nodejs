@@ -1,27 +1,35 @@
-const path = require('path');
+const path = require("path");
+const fs = require("fs");
 
-const contactsPath = path.join('.'+'db'+'contacts.json');
- 
+const contactsPath = path.resolve("db", "contacts.json");
 
-function listContacts() {
-    
+ async function listContacts() {
+  const data = await fs.promises.readFile(contactsPath, 'utf8');
+  return JSON.parse(data);
+
 }
 
-function getContactById(contactId) {
-  // ...твой код
+async function getContactById(contactId) {
+  const data = await listContacts();
+  const parsedData = data.filter(el => el.id === contactId);
+  return parsedData;
 }
 
-function removeContact(contactId) {
-  // ...твой код
+async function removeContact(contactId) {
+  const data = await listContacts();
+  const parsedData = data.filter(el => el.id !== contactId);
+  return parsedData;
 }
 
-function addContact(name, email, phone) {
-  // ...твой код
+async function addContact(name, email, phone) {
+  const data = await listContacts();
+  const newUser = {name,email,phone};
+  return [...data, newUser]
 }
 
 module.exports = {
-    listContacts, 
-    getContactById,
-    removeContact,
-    addContact
-}
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+};
