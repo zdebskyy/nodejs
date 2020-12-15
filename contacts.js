@@ -30,8 +30,12 @@ async function addContact(name, email, phone) {
     }
   });
 
-  const newUser = { name, email, phone, id: userId + 1 };
-  return [...data, newUser];
+  const newUser = { id: userId + 1, name, email, phone };
+  const newData = [...data, newUser];
+
+  await fs.promises.writeFile(contactsPath, JSON.stringify(newData));
+
+  return newData;
 }
 
 module.exports = {
