@@ -11,12 +11,13 @@ async function listContacts() {
 async function getContactById(contactId) {
   const data = await listContacts();
   const parsedData = data.filter((el) => el.id === contactId);
-  return parsedData;
+  return parsedData[0];
 }
 
 async function removeContact(contactId) {
   const data = await listContacts();
   const parsedData = data.filter((el) => el.id !== contactId);
+  await fs.promises.writeFile(contactsPath, JSON.stringify(parsedData));
   return parsedData;
 }
 
