@@ -23,7 +23,14 @@ async function removeContact(contactId) {
 async function addContact(name, email, phone) {
   const data = await listContacts();
 
-  const newUser = { name, email, phone };
+  let userId = 0;
+  data.forEach((element) => {
+    if (element.id > userId) {
+      userId = element.id;
+    }
+  });
+
+  const newUser = { name, email, phone, id: userId + 1 };
   return [...data, newUser];
 }
 
