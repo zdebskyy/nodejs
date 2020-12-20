@@ -7,16 +7,18 @@ const {
   remove,
   update,
   add,
+  validateCreateContact,
+  validatePatchContact,
 } = require("../controllers/contactsController");
 
 router.get("/", getUsers);
 
 router.get("/:contactId", getById);
 
-router.post("/", add);
+router.post("/", validateCreateContact, add);
 
 router.delete("/:contactId", remove);
 
-router.patch("/:contactId", update);
+router.patch("/:contactId", validatePatchContact, update);
 
 module.exports = router;
