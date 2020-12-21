@@ -12,9 +12,12 @@ module.exports.getUsers = async (req, res) => {
 };
 
 module.exports.getById = async (req, res) => {
-  return res
-    .status(200)
-    .json(await getContactById(parseInt(req.params.contactId)));
+  const id = parseInt(req.params.contactId);
+  const user = await getContactById(id);
+  if (!user) {
+    return res.status(400).json({ message: "Not found" });
+  }
+  res.status(200).json(user);
 };
 
 module.exports.add = async (req, res) => {
@@ -23,15 +26,19 @@ module.exports.add = async (req, res) => {
 };
 
 module.exports.remove = async (req, res) => {
-  return res
-    .status(200)
-    .json(await removeContact(parseInt(req.params.contactId)));
+  const id = parseInt(req.params.contactId);
+  const user = await getContactById(id);
+  if (!user) {
+    return res.status(404).json({ message: "Not found" });
+  }
+
+  const data = await removeContact(id);
+  return res.status(200).json(data);
 };
 
 module.exports.update = async (req, res) => {
-  return res
-    .status(200)
-    .json(await updateContact(parseInt(req.params.contactId), req.body));
+  const id = parseInt(req.params.contactId);
+  return res.status(200).json(await updateContact(id, req.body));
 };
 module.exports.validateCreateContact = (req, res, next) => {
   const schema = Joi.object({
