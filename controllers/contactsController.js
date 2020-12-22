@@ -13,37 +13,43 @@ module.exports.getUsers = async (req, res) => {
 
 module.exports.getById = async (req, res) => {
   const id = parseInt(req.params.contactId);
-  const user = await getContactById(id);
-  if (!user) {
-    return res.status(400).json({ message: "Not found" });
+  const contact = await getContactById(id);
+  if (!contact) {
+    return res.status(404).json({ message: "Not found" });
   }
-  res.status(200).json(user);
+  res.status(200).json(contact);
 };
 
 module.exports.add = async (req, res) => {
   const { name, email, phone } = req.body;
-  return res.status(200).json(await addContact(name, email, phone));
+  const contact = await addContact(name, email, phone);
+  return res.status(200).json(contact);
 };
 
 module.exports.remove = async (req, res) => {
   const id = parseInt(req.params.contactId);
-  const user = await getContactById(id);
-  if (!user) {
+  const contact = await getContactById(id);
+  if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
 
-  const data = await removeContact(id);
-  return res.status(200).json(data);
+  const contactToDelete = await removeContact(id);
+  return res.status(200).json(contactToDelete);
 };
 
 module.exports.update = async (req, res) => {
   const id = parseInt(req.params.contactId);
-  return res.status(200).json(await updateContact(id, req.body));
+  const contact = await getContactById(id);
+  if (!contact) {
+    return res.status(404).json({ message: "Not found" });
+  }
+  const updatedContact = await updateContact(id, req.body);
+  return res.status(200).json(updatedContact);
 };
 module.exports.validateCreateContact = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
-    email: Joi.string().min(1).required(),
+    email: Joi.string().min(1).email().required(),
     phone: Joi.string().min(1).required(),
   });
 
@@ -58,7 +64,7 @@ module.exports.validateCreateContact = (req, res, next) => {
 module.exports.validatePatchContact = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(1),
-    email: Joi.string().min(1),
+    email: Joi.string().min(1).email(),
     phone: Joi.string().min(1),
   });
 
