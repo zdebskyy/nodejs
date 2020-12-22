@@ -7,26 +7,26 @@ const {
   updateContact,
 } = require("../contacts");
 
-module.exports.getUsers = async (req, res) => {
+async function getUsers(req, res) {
   res.status(200).json(await listContacts());
-};
+}
 
-module.exports.getById = async (req, res) => {
+async function getById(req, res) {
   const id = parseInt(req.params.contactId);
   const contact = await getContactById(id);
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
   res.status(200).json(contact);
-};
+}
 
-module.exports.add = async (req, res) => {
+async function add(req, res) {
   const { name, email, phone } = req.body;
   const contact = await addContact(name, email, phone);
   return res.status(200).json(contact);
-};
+}
 
-module.exports.remove = async (req, res) => {
+async function remove(req, res) {
   const id = parseInt(req.params.contactId);
   const contact = await getContactById(id);
   if (!contact) {
@@ -35,9 +35,9 @@ module.exports.remove = async (req, res) => {
 
   const contactToDelete = await removeContact(id);
   return res.status(200).json(contactToDelete);
-};
+}
 
-module.exports.update = async (req, res) => {
+async function update(req, res) {
   const id = parseInt(req.params.contactId);
   const contact = await getContactById(id);
   if (!contact) {
@@ -45,8 +45,8 @@ module.exports.update = async (req, res) => {
   }
   const updatedContact = await updateContact(id, req.body);
   return res.status(200).json(updatedContact);
-};
-module.exports.validateCreateContact = (req, res, next) => {
+}
+function validateCreateContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
     email: Joi.string().min(1).email().required(),
@@ -59,9 +59,9 @@ module.exports.validateCreateContact = (req, res, next) => {
     return res.status(400).send(result.error);
   }
   next();
-};
+}
 
-module.exports.validatePatchContact = (req, res, next) => {
+function validatePatchContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1),
     email: Joi.string().min(1).email(),
@@ -74,4 +74,14 @@ module.exports.validatePatchContact = (req, res, next) => {
     return res.status(400).send(result.error);
   }
   next();
+}
+
+module.exports = {
+  getUsers,
+  getById,
+  add,
+  remove,
+  update,
+  validateCreateContact,
+  validatePatchContact,
 };
