@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const MongoClient = require("mongodb").MongoClient;
 const {
   listContacts,
   getContactById,
@@ -6,6 +7,26 @@ const {
   addContact,
   updateContact,
 } = require("../contacts");
+
+const url =
+  "mongodb+srv://zdebskyy:zdebskyy@cluster0.3nne1.mongodb.net/<dbname>?retryWrites=true&w=majority";
+
+let client;
+let db;
+let contactsCollection;
+
+async function start() {
+  client = await MongoClient.connect(url, { useNewUrlParser: true });
+  db = client.db("db-contacts");
+  contactsCollection = db.collection("contacts");
+
+  const conatcts = await contactsCollection.find({}).toArray();
+  console.log(await conatcts);
+
+  console.log("Succesfuly connected to database sir!");
+}
+
+start();
 
 async function getUsers(req, res) {
   res.status(200).json(await listContacts());
