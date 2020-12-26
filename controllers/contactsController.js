@@ -1,5 +1,3 @@
-const Joi = require("joi");
-require("dotenv").config();
 const { Contact } = require("../models/contactModel");
 
 async function getUsers(req, res) {
@@ -39,39 +37,6 @@ async function update(req, res) {
   }
   return res.status(200).json({ message: "Contact modified" });
 }
-function validateCreateContact(req, res, next) {
-  const schema = Joi.object({
-    name: Joi.string().min(1).required(),
-    email: Joi.string().min(1).email().required(),
-    password: Joi.string().min(1).required(),
-    subscription: Joi.string().required(),
-    token: Joi.string(),
-  });
-
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error);
-  }
-  next();
-}
-
-function validatePatchContact(req, res, next) {
-  const schema = Joi.object({
-    name: Joi.string().min(1),
-    email: Joi.string().min(1).email(),
-    password: Joi.string().min(1),
-    subscription: Joi.string(),
-    token: Joi.string(),
-  });
-
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error);
-  }
-  next();
-}
 
 module.exports = {
   getUsers,
@@ -79,6 +44,4 @@ module.exports = {
   add,
   remove,
   update,
-  validateCreateContact,
-  validatePatchContact,
 };

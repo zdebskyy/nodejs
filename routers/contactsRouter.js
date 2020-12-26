@@ -2,13 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 const {
+  validateCreateContact,
+  validatePatchContact,
+} = require("../validation/validationJoi");
+
+const {
   getUsers,
   getById,
   remove,
   update,
   add,
-  validateCreateContact,
-  validatePatchContact,
 } = require("../controllers/contactsController");
 
 router.get("/", getUsers);
