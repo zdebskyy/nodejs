@@ -1,77 +1,51 @@
 const Joi = require("joi");
-const MongoClient = require("mongodb").MongoClient;
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-} = require("../contacts");
-
-const url =
-  "mongodb+srv://zdebskyy:zdebskyy@cluster0.3nne1.mongodb.net/<dbname>?retryWrites=true&w=majority";
-
-let client;
-let db;
-let contactsCollection;
-
-async function start() {
-  client = await MongoClient.connect(url, { useNewUrlParser: true });
-  db = client.db("db-contacts");
-  contactsCollection = db.collection("contacts");
-
-  const conatcts = await contactsCollection.find({}).toArray();
-  console.log(await conatcts);
-
-  console.log("Succesfuly connected to database sir!");
-}
-
-start();
+require("dotenv").config();
+const { Contact } = require("../models/contactModel");
 
 async function getUsers(req, res) {
-  res.status(200).json(await listContacts());
+  const contacts = await Contact.find({});
+  return res.status(200).json(contacts);
 }
 
 async function getById(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
+  const id = req.params.contactId;
+  const contact = await Contact.findById(id);
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
-  res.status(200).json(contact);
-}
-
-async function add(req, res) {
-  const { name, email, phone } = req.body;
-  const contact = await addContact(name, email, phone);
   return res.status(200).json(contact);
 }
 
+async function add(req, res) {
+  const contact = await new Contact(req.body);
+  await contact.save();
+  return res.status(201).json({ message: "Contact created" });
+}
+
 async function remove(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
-  if (!contact) {
+  const id = req.params.contactId;
+  const contactToDelete = await Contact.findByIdAndDelete(id);
+  if (!contactToDelete) {
     return res.status(404).json({ message: "Not found" });
   }
-
-  const contactToDelete = await removeContact(id);
-  return res.status(200).json(contactToDelete);
+  return res.status(200).json({ message: "Contact deleted" });
 }
 
 async function update(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
+  const id = req.params.contactId;
+  const contact = await Contact.findByIdAndUpdate(id, { $set: req.body });
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
-  const updatedContact = await updateContact(id, req.body);
-  return res.status(200).json(updatedContact);
+  return res.status(200).json({ message: "Contact modified" });
 }
 function validateCreateContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
     email: Joi.string().min(1).email().required(),
-    phone: Joi.string().min(1).required(),
+    password: Joi.string().min(1).required(),
+    subscription: Joi.string().required(),
+    token: Joi.string(),
   });
 
   const result = schema.validate(req.body);
@@ -86,7 +60,9 @@ function validatePatchContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1),
     email: Joi.string().min(1).email(),
-    phone: Joi.string().min(1),
+    password: Joi.string().min(1),
+    subscription: Joi.string(),
+    token: Joi.string(),
   });
 
   const result = schema.validate(req.body);
