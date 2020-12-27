@@ -26,7 +26,8 @@ async function start() {
 
     console.log("Succesfuly connected to database sir!");
   } catch (error) {
-    console.log("error", error);
+    console.log("error :", error);
+    process.exit(1);
   }
 }
 
