@@ -7,17 +7,17 @@ const {
 } = require("../validation/validationJoi");
 
 const {
-  getUsers,
+  getContact,
   getById,
-  remove,
-  update,
-  add,
+  removeContact,
+  updateContact,
+  addContact,
 } = require("../controllers/contactsController");
 
-router.get("/", getUsers);
+router.get("/", getContact);
 router.get("/:contactId", getById);
-router.post("/", validateCreateContact, add);
-router.delete("/:contactId", remove);
-router.patch("/:contactId", validatePatchContact, update);
+router.post("/", validateCreateContact, addContact);
+router.delete("/:contactId", removeContact);
+router.patch("/:contactId", validatePatchContact, updateContact);
 
 module.exports = router;

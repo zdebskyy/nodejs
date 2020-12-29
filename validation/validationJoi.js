@@ -5,7 +5,7 @@ function validateCreateContact(req, res, next) {
     name: Joi.string().min(1).required(),
     email: Joi.string().min(1).email().required(),
     password: Joi.string().min(1).required(),
-    subscription: Joi.string().required(),
+    subscription: Joi.string(),
     token: Joi.string(),
   });
 

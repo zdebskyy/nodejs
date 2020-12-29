@@ -1,6 +1,6 @@
 const { Contact } = require("../models/contactModel");
 
-async function getUsers(req, res) {
+async function getContact(req, res) {
   const contacts = await Contact.find({});
   return res.status(200).json(contacts);
 }
@@ -14,13 +14,13 @@ async function getById(req, res) {
   return res.status(200).json(contact);
 }
 
-async function add(req, res) {
+async function addContact(req, res) {
   const contact = await new Contact(req.body);
   await contact.save();
   return res.status(201).json({ message: "Contact created" });
 }
 
-async function remove(req, res) {
+async function removeContact(req, res) {
   const id = req.params.contactId;
   const contactToDelete = await Contact.findByIdAndDelete(id);
   if (!contactToDelete) {
@@ -29,7 +29,7 @@ async function remove(req, res) {
   return res.status(200).json({ message: "Contact deleted" });
 }
 
-async function update(req, res) {
+async function updateContact(req, res) {
   const id = req.params.contactId;
   const contact = await Contact.findByIdAndUpdate(id, { $set: req.body });
   if (!contact) {
@@ -39,9 +39,9 @@ async function update(req, res) {
 }
 
 module.exports = {
-  getUsers,
+  getContact,
   getById,
-  add,
-  remove,
-  update,
+  addContact,
+  removeContact,
+  updateContact,
 };
