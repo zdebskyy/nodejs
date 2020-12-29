@@ -10,6 +10,10 @@ const contactsSchema = new mongoose.Schema({
     unique: true,
     require: true,
   },
+  phone: {
+    type: String,
+    require: true,
+  },
   password: {
     type: String,
     require: true,

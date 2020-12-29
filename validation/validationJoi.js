@@ -4,6 +4,7 @@ function validateCreateContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1).required(),
     email: Joi.string().min(1).email().required(),
+    phone: Joi.string().min(1).required(),
     password: Joi.string().min(1).required(),
     subscription: Joi.string(),
     token: Joi.string(),
@@ -21,6 +22,7 @@ function validatePatchContact(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().min(1),
     email: Joi.string().min(1).email(),
+    phone: Joi.string().min(1),
     password: Joi.string().min(1),
     subscription: Joi.string(),
     token: Joi.string(),
