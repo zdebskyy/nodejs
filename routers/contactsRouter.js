@@ -7,14 +7,14 @@ const {
 } = require("../validation/validationJoi");
 
 const {
-  getContact,
+  getContactsList,
   getContactById,
   removeContact,
   updateContact,
   addContact,
 } = require("../controllers/contactsController");
 
-router.get("/", getContact);
+router.get("/", getContactsList);
 router.get("/:contactId", getContactById);
 router.post("/", validateCreateContact, addContact);
 router.delete("/:contactId", removeContact);

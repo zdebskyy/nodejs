@@ -1,13 +1,13 @@
-const { Contact } = require("../models/contactModel");
+const { ContactModel } = require("../models/contactModel");
 
-async function getContact(req, res) {
-  const contacts = await Contact.find({});
+async function getContactsList(req, res) {
+  const contacts = await ContactModel.find({});
   return res.status(200).json(contacts);
 }
 
 async function getContactById(req, res) {
   const id = req.params.contactId;
-  const contact = await Contact.findById(id);
+  const contact = await ContactModel.findById(id);
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
@@ -15,14 +15,14 @@ async function getContactById(req, res) {
 }
 
 async function addContact(req, res) {
-  const contact = await new Contact(req.body);
+  const contact = await new ContactModel(req.body);
   await contact.save();
   return res.status(201).json({ message: "Contact created" });
 }
 
 async function removeContact(req, res) {
   const id = req.params.contactId;
-  const contactToDelete = await Contact.findByIdAndDelete(id);
+  const contactToDelete = await ContactModel.findByIdAndDelete(id);
   if (!contactToDelete) {
     return res.status(404).json({ message: "Not found" });
   }
@@ -31,7 +31,7 @@ async function removeContact(req, res) {
 
 async function updateContact(req, res) {
   const id = req.params.contactId;
-  const contact = await Contact.findByIdAndUpdate(id, { $set: req.body });
+  const contact = await ContactModel.findByIdAndUpdate(id, { $set: req.body });
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
@@ -39,7 +39,7 @@ async function updateContact(req, res) {
 }
 
 module.exports = {
-  getContact,
+  getContactsList,
   getContactById,
   addContact,
   removeContact,
