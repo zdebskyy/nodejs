@@ -17,7 +17,7 @@ const contactsSchema = new mongoose.Schema({
 
   subscription: {
     type: String,
-    default: "",
+    default: "free",
   },
   token: {
     type: String,
