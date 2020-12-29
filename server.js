@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const { json } = require("express");
 require("dotenv").config();
-const contactsRouter = require("./routers/contactsRouter");
+const contactRouter = require("./routers/contactsRouter");
 
 const port = process.env.PORT || 8080;
 const url = process.env.MONGO_URL;
@@ -32,7 +32,7 @@ module.exports = class ContactServer {
   }
 
   initRoutes() {
-    this.server.use("/api/contacts", contactsRouter);
+    this.server.use("/api/contacts", contactRouter);
   }
 
   async initDatabase() {
