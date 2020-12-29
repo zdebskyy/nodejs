@@ -8,14 +8,14 @@ const {
 
 const {
   getContact,
-  getById,
+  getContactById,
   removeContact,
   updateContact,
   addContact,
 } = require("../controllers/contactsController");
 
 router.get("/", getContact);
-router.get("/:contactId", getById);
+router.get("/:contactId", getContactById);
 router.post("/", validateCreateContact, addContact);
 router.delete("/:contactId", removeContact);
 router.patch("/:contactId", validatePatchContact, updateContact);

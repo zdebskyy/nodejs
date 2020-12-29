@@ -15,8 +15,14 @@ const contactsSchema = new mongoose.Schema({
     require: true,
   },
 
-  subscription: { type: String, default: "" },
-  token: { type: String, default: "" },
+  subscription: {
+    type: String,
+    default: "",
+  },
+  token: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports.Contact = mongoose.model("ContactModel", contactsSchema);

@@ -5,7 +5,7 @@ async function getContact(req, res) {
   return res.status(200).json(contacts);
 }
 
-async function getById(req, res) {
+async function getContactById(req, res) {
   const id = req.params.contactId;
   const contact = await Contact.findById(id);
   if (!contact) {
@@ -40,7 +40,7 @@ async function updateContact(req, res) {
 
 module.exports = {
   getContact,
-  getById,
+  getContactById,
   addContact,
   removeContact,
   updateContact,
