@@ -1,87 +1,47 @@
-const Joi = require("joi");
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-} = require("../contacts");
+const { ContactModel } = require("../models/contactModel");
 
-async function getUsers(req, res) {
-  res.status(200).json(await listContacts());
+async function getContactsList(req, res) {
+  const contacts = await ContactModel.find({});
+  return res.status(200).json(contacts);
 }
 
-async function getById(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
+async function getContactById(req, res) {
+  const id = req.params.contactId;
+  const contact = await ContactModel.findById(id);
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
-  res.status(200).json(contact);
-}
-
-async function add(req, res) {
-  const { name, email, phone } = req.body;
-  const contact = await addContact(name, email, phone);
   return res.status(200).json(contact);
 }
 
-async function remove(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
+async function addContact(req, res) {
+  const contact = await new ContactModel(req.body);
+  await contact.save();
+  return res.status(201).json({ message: "Contact created" });
+}
+
+async function removeContact(req, res) {
+  const id = req.params.contactId;
+  const contactToDelete = await ContactModel.findByIdAndDelete(id);
+  if (!contactToDelete) {
+    return res.status(404).json({ message: "Not found" });
+  }
+  return res.status(200).json({ message: "Contact deleted" });
+}
+
+async function updateContact(req, res) {
+  const id = req.params.contactId;
+  const contact = await ContactModel.findByIdAndUpdate(id, { $set: req.body });
   if (!contact) {
     return res.status(404).json({ message: "Not found" });
   }
-
-  const contactToDelete = await removeContact(id);
-  return res.status(200).json(contactToDelete);
-}
-
-async function update(req, res) {
-  const id = parseInt(req.params.contactId);
-  const contact = await getContactById(id);
-  if (!contact) {
-    return res.status(404).json({ message: "Not found" });
-  }
-  const updatedContact = await updateContact(id, req.body);
-  return res.status(200).json(updatedContact);
-}
-function validateCreateContact(req, res, next) {
-  const schema = Joi.object({
-    name: Joi.string().min(1).required(),
-    email: Joi.string().min(1).email().required(),
-    phone: Joi.string().min(1).required(),
-  });
-
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error);
-  }
-  next();
-}
-
-function validatePatchContact(req, res, next) {
-  const schema = Joi.object({
-    name: Joi.string().min(1),
-    email: Joi.string().min(1).email(),
-    phone: Joi.string().min(1),
-  });
-
-  const result = schema.validate(req.body);
-
-  if (result.error) {
-    return res.status(400).send(result.error);
-  }
-  next();
+  return res.status(200).json({ message: "Contact modified" });
 }
 
 module.exports = {
-  getUsers,
-  getById,
-  add,
-  remove,
-  update,
-  validateCreateContact,
-  validatePatchContact,
+  getContactsList,
+  getContactById,
+  addContact,
+  removeContact,
+  updateContact,
 };
