@@ -17,7 +17,6 @@ module.exports = async (req, res, next) => {
 
   const user = await userModel.findById(userId);
 
-  console.log(user);
   req.user = user;
 
   next();

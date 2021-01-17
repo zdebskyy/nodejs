@@ -28,16 +28,16 @@ async function login(req, res) {
   const token = jwt.sign(
     {
       id: user._id,
-      email: req.body.email,
+      email: user.email,
     },
     process.env.JWTSECRET
   );
 
-  const userToken = await userModel.findByIdAndUpdate(user._id, {
+  await userModel.findByIdAndUpdate(user._id, {
     token,
   });
 
-  return res.json({
+  return res.status(200).json({
     token,
     user: {
       id: user._id,
