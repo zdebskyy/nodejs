@@ -5,6 +5,7 @@ const express = require("express");
 const { json } = require("express");
 require("dotenv").config();
 const contactRouter = require("./routers/contactsRouter");
+const userRouter = require("./routers/userRouter");
 
 const port = process.env.PORT || 8080;
 const url = process.env.MONGO_URL;
@@ -33,6 +34,7 @@ module.exports = class ContactServer {
 
   initRoutes() {
     this.server.use("/api/contacts", contactRouter);
+    this.server.use("/api/users", userRouter);
   }
 
   async initDatabase() {
