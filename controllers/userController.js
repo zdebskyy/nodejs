@@ -28,7 +28,6 @@ async function login(req, res) {
   const token = jwt.sign(
     {
       id: user._id,
-      email: user.email,
     },
     process.env.JWTSECRET
   );
@@ -63,9 +62,35 @@ async function getCurrentUser(req, res) {
   return res.status(200).send({ email, subscription });
 }
 
+async function getUsersFreeSubsciption(req, res) {
+  const { sub } = req.query;
+
+  if (!sub) {
+    return res.status(400).json({ message: "Bad request" });
+  }
+
+  const freeSubUser = await userModel.find({ subscription: { $eq: sub } });
+
+  return res.status(200).json(freeSubUser);
+}
+
+async function updateUserSubscription(req, res) {
+  const { _id } = req.user;
+
+  const { subscription } = req.body;
+
+  await userModel.findByIdAndUpdate(_id, {
+    $set: { subscription },
+  });
+
+  return res.status(200).json({ message: "subscription updated" });
+}
+
 module.exports = {
   registration,
   login,
   logout,
   getCurrentUser,
+  getUsersFreeSubsciption,
+  updateUserSubscription,
 };

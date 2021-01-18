@@ -65,10 +65,23 @@ function validateUserLogin(req, res, next) {
   next();
 }
 
+function validateSubscription(req, res, next) {
+  const schema = Joi.object({
+    subscription: Joi.string().valid("free", "pro", "premium"),
+  });
+
+  const result = schema.validate(req.body);
+
+  if (result.error) {
+    return res.status(400).send(result.error);
+  }
+  next();
+}
+
 module.exports = {
   validateCreateContact,
   validatePatchContact,
   validateUserRegistration,
-
   validateUserLogin,
+  validateSubscription,
 };
