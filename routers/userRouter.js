@@ -5,11 +5,10 @@ const {
   getUsersFreeSubsciption,
   updateUserSubscription,
 } = require("../controllers/userController");
-const { validateSubscription } = require("../validation/validationJoi");
+const { validateSubscription } = require("../validation/userValidationJoi");
 const authValidation = require("../validation/authValidation");
 
 router.get("/current", authValidation, getCurrentUser);
-router.get("/", authValidation, getUsersFreeSubsciption);
 router.patch("/", authValidation, validateSubscription, updateUserSubscription);
 
 module.exports = router;

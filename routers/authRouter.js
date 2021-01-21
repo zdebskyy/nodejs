@@ -4,12 +4,12 @@ const {
   registration,
   login,
   logout,
-} = require("../controllers/userController");
+} = require("../controllers/authController");
 
 const {
   validateUserRegistration,
   validateUserLogin,
-} = require("../validation/validationJoi");
+} = require("../validation/userValidationJoi");
 
 const authValidation = require("../validation/authValidation");
 
