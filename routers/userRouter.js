@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const {
   getCurrentUser,
-  getUsersFreeSubsciption,
   updateUserSubscription,
 } = require("../controllers/userController");
 const { validateSubscription } = require("../validation/userValidationJoi");

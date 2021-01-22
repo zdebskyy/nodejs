@@ -1,11 +1,7 @@
 const { userModel } = require("../models/userModel");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
 async function registration(req, res) {
-  console.log(req.body.password);
   const hashPassword = await userModel.passwordHash(req.body.password);
-  console.log(hashPassword);
   const user = await new userModel({
     email: req.body.email,
     password: hashPassword,
@@ -24,20 +20,13 @@ async function login(req, res) {
   if (!user) {
     return res.status(401).json({ message: "Not found" });
   }
-  if (!(await bcrypt.compare(req.body.password, user.password))) {
+  if (!(await user.passwordCompare(req.body.password))) {
     return res.status(401).json({ message: "Wrong password" });
   }
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-    },
-    process.env.JWTSECRET
-  );
+  await user.assignToken();
 
-  await userModel.findByIdAndUpdate(user._id, {
-    token,
-  });
+  const { token } = await user.assignToken();
 
   return res.status(200).json({
     token,
@@ -56,9 +45,11 @@ async function logout(req, res) {
     return res.status(400).json({ message: "Not found" });
   }
 
-  await userModel.findByIdAndUpdate(user._id, {
-    token: "",
-  });
+  const userToBeLogouted = await user.resetToken();
+
+  if (!userToBeLogouted) {
+    return res.status(400).json({ message: "Bad request" });
+  }
 
   return res.status(204).send();
 }
