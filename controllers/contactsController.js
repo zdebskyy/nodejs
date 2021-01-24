@@ -37,6 +37,15 @@ async function updateContact(req, res) {
   }
   return res.status(200).json({ message: "Contact modified" });
 }
+async function getContactFreeSubsciption(req, res) {
+  const { sub } = req.query;
+
+  const freeSubContact = await ContactModel.find({
+    subscription: { $eq: sub },
+  });
+
+  return res.status(200).json(freeSubContact);
+}
 
 module.exports = {
   getContactsList,
@@ -44,4 +53,5 @@ module.exports = {
   addContact,
   removeContact,
   updateContact,
+  getContactFreeSubsciption,
 };

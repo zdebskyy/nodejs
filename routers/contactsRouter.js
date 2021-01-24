@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   validateCreateContact,
   validatePatchContact,
-} = require("../validation/validationJoi");
+} = require("../validation/contactValidationJoi");
 
 const {
   getContactsList,
@@ -12,8 +12,10 @@ const {
   removeContact,
   updateContact,
   addContact,
+  getContactFreeSubsciption,
 } = require("../controllers/contactsController");
 
+router.get("/", getContactFreeSubsciption);
 router.get("/", getContactsList);
 router.get("/:contactId", getContactById);
 router.post("/", validateCreateContact, addContact);

@@ -7,8 +7,14 @@ module.exports = async (req, res, next) => {
   if (!header) {
     return res.status(401).json({ message: "Not authorized headers" });
   }
+  let type;
+  let token;
 
-  const [type, token] = header.split(" ");
+  if (!header.includes(" ")) {
+    token = header;
+  } else {
+    [type, token] = header.split(" ");
+  }
   if (!token) {
     return res.status(401).json({ message: "Not authorized token" });
   }
