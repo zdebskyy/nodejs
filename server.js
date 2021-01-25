@@ -31,6 +31,7 @@ module.exports = class ContactServer {
     this.server.use(json());
     this.server.use(cors());
     this.server.use(morgan("dev"));
+    this.server.use(express.static("public"));
   }
 
   initRoutes() {
