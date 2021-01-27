@@ -4,6 +4,11 @@ const { avatarCreate } = require("../avatar/avatarCreater");
 async function registration(req, res) {
   const hashPassword = await userModel.passwordHash(req.body.password);
 
+  const existingUser = await userModel.findByEmail(req.body.email);
+  if (existingUser) {
+    return res.status(409).json({ message: "Email duplicate" });
+  }
+
   const avatarName = await avatarCreate();
 
   const avatarUrlString = `http://localhost:${process.env.PORT}/images/${avatarName}`;

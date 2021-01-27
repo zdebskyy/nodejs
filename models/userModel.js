@@ -32,6 +32,10 @@ userSchema.statics.passwordHash = async function (password) {
   return await bcrypt.hash(password, 10);
 };
 
+userSchema.statics.findByEmail = async function (email) {
+  return await this.findOne({ email });
+};
+
 userSchema.methods.passwordCompare = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
