@@ -9,8 +9,6 @@ async function registration(req, res) {
     return res.status(409).json({ message: "Email duplicate" });
   }
 
-  console.log(process.env.SENDGRID_API_KEY);
-
   const avatarName = await avatarCreate();
 
   const avatarUrlString = `http://localhost:${process.env.PORT}/images/${avatarName}`;
