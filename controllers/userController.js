@@ -18,7 +18,27 @@ async function updateUserSubscription(req, res) {
   return res.status(200).json({ message: "subscription updated" });
 }
 
+async function updateUserAvatar(req, res) {
+  const { _id } = req.user;
+  const { filename } = req.file;
+
+  const updatedUserAvatar = await userModel.findByIdAndUpdate(
+    _id,
+    {
+      $set: {
+        avatarURL: `http://localhost:${process.env.PORT}/images/${filename}`,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  return res.status(200).json({ avatarURL: updatedUserAvatar.avatarURL });
+}
+
 module.exports = {
   getCurrentUser,
   updateUserSubscription,
+  updateUserAvatar,
 };
