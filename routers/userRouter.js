@@ -16,7 +16,7 @@ router.get("/current", authValidation, getCurrentUser);
 router.patch(
   "/avatars",
   authValidation,
-  upload.single("avatar_file"),
+  upload.single("avatar"),
   minimazeImage,
   updateUserAvatar
 );
