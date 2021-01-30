@@ -19,13 +19,30 @@ async function registration(req, res) {
     avatarURL: avatarUrlString,
   });
 
-  await user.save();
+  await user.createVerificationToken();
+
+  await user.sendVerificationEmail();
 
   return res.status(201).json({
     email: user.email,
     subscription: user.subscription,
     avatarURL: user.avatarURL,
   });
+}
+
+async function verifyEmail(req, res) {
+  const { verificationToken } = req.params;
+
+  const userToVerify = await userModel.findByVerificationToken(
+    verificationToken
+  );
+
+  if (!userToVerify) {
+    return res.status(400).json({ message: "Not found" });
+  }
+  await userModel.verifyUser(userToVerify._id);
+
+  res.status(200).json({ message: "Successuly verified" });
 }
 
 async function login(req, res) {
@@ -35,6 +52,10 @@ async function login(req, res) {
   }
   if (!(await user.passwordCompare(req.body.password))) {
     return res.status(401).json({ message: "Wrong password" });
+  }
+
+  if (user.status !== "verified") {
+    return res.status(400).json({ message: "Not verified" });
   }
 
   await user.assignToken();
@@ -71,4 +92,5 @@ module.exports = {
   registration,
   login,
   logout,
+  verifyEmail,
 };
