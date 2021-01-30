@@ -58,7 +58,7 @@ userSchema.methods.sendVerificationEmail = async function () {
   console.log(this);
   const msg = {
     to: this.email,
-    from: "technomaster@ukr.net",
+    from: process.env.SENDGRID_VERIFIED_EMAIL,
     subject: "Sending with Twilio SendGrid is Fun",
     text: "and easy to do anywhere, even with Node.js",
     html: `<a href='http://localhost:3000/api/auth/verify/${this.verificationToken}'>Click here to verify your email</a>`,
